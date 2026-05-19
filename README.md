@@ -1,8 +1,15 @@
-# prefetcharr
+<div align="center">
 
-![prefetcharr-go gopher mascot](assets/gopher.png)
+# prefetcharr-go
+
+<a href="https://github.com/Primexz/lndnotify">
+    <img src="./assets/gopher.png" width="350" />
+</a>
 
 Go rewrite of the original Rust [`prefetcharr`](https://github.com/p-hueber/prefetcharr), focused on one workflow: when someone watches a Jellyfin series, ask Sonarr to search upcoming seasons.
+
+</div>
+
 
 ## Behavior
 
