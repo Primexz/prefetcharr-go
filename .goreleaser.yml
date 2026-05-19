@@ -1,0 +1,49 @@
+project_name: prefetcharr-go
+version: 2
+builds:
+  - 
+    env:
+      - CGO_ENABLED=0
+    binary: prefetcharr-go
+    ldflags:
+      - -s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}}
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+
+upx:
+  -
+    enabled: true
+    goos:
+      - linux
+    compress: best
+    lzma: true
+
+dockers:
+  - image_templates:
+    - "ghcr.io/primexz/prefetcharr-go:{{ .Version }}-amd64"
+    use: buildx
+    dockerfile: Dockerfile
+    build_flag_templates:
+    - "--platform=linux/amd64"
+
+  - image_templates:
+    - "ghcr.io/primexz/prefetcharr-go:{{ .Version }}-arm64v8"
+    use: buildx
+    goarch: arm64
+    dockerfile: Dockerfile
+    build_flag_templates:
+    - "--platform=linux/arm64/v8"
+
+docker_manifests:
+  - name_template: "ghcr.io/primexz/prefetcharr-go:{{ .Version }}"
+    image_templates:
+    - "ghcr.io/primexz/prefetcharr-go:{{ .Version }}-amd64"
+    - "ghcr.io/primexz/prefetcharr-go:{{ .Version }}-arm64v8"
+  - name_template: "ghcr.io/primexz/prefetcharr-go:latest"
+    image_templates:
+    - "ghcr.io/primexz/prefetcharr-go:{{ .Version }}-amd64"
+    - "ghcr.io/primexz/prefetcharr-go:{{ .Version }}-arm64v8"

@@ -1,0 +1,20 @@
+interval: 300s
+log_level: debug
+
+prefetch:
+  # While S01 is playing, search S02. Set to 2 to search S02 and S03.
+  seasons_ahead: 1
+  include_current_season: false
+  search_complete_seasons: false
+  dedupe_ttl: 168h
+
+jellyfin:
+  url: http://jellyfin:8096
+  api_key: your-jellyfin-api-key
+
+sonarr:
+  url: http://sonarr:8989
+  api_key: your-sonarr-api-key
+
+# Empty means all users.
+allowed_users: []
