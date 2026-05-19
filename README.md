@@ -2,7 +2,7 @@
 
 # prefetcharr-go
 
-<a href="https://github.com/Primexz/lndnotify">
+<a href="https://github.com/Primexz/prefetcharr-go">
     <img src="./assets/gopher.png" width="350" />
 </a>
 
