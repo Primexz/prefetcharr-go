@@ -3,6 +3,7 @@ name: Dev Release
 on:
   push:
     branches:
+      - develop
       - master
   workflow_dispatch:
 
