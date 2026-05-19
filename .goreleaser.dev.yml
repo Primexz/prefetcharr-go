@@ -11,6 +11,7 @@ builds:
     env:
       - CGO_ENABLED=0
     binary: prefetcharr-go
+    main: ./cmd/prefetcharr
     ldflags:
       - -s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}}
     goos:
@@ -19,14 +20,6 @@ builds:
     goarch:
       - amd64
       - arm64
-
-upx:
-  -
-    enabled: true
-    goos:
-      - linux
-    compress: best
-    lzma: true
 
 dockers:
   - image_templates:
