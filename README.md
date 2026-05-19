@@ -1,5 +1,7 @@
 # prefetcharr
 
+![prefetcharr-go gopher mascot](assets/gopher.png)
+
 Go rewrite of the original Rust [`prefetcharr`](https://github.com/p-hueber/prefetcharr), focused on one workflow: when someone watches a Jellyfin series, ask Sonarr to search upcoming seasons.
 
 ## Behavior
