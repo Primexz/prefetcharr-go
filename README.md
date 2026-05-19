@@ -19,8 +19,6 @@ With `seasons_ahead: 1` and `include_current_season: false`, watching `S01E01` s
 
 Already searched seasons are deduplicated for `dedupe_ttl` to avoid submitting the same Sonarr search every poll.
 
-The original implementation supported multiple media servers and episode-window prefetching. This rewrite intentionally supports only Jellyfin and Sonarr, and it prefetches by season instead of by upcoming episode count. Radarr is not implemented because Radarr has no season model.
-
 ## Configuration
 
 Copy `config.example.yaml` and fill in the API keys:
