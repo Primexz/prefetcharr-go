@@ -17,13 +17,13 @@ Go rewrite of the original Rust [`prefetcharr`](https://github.com/p-hueber/pref
 
 ## Behavior
 
-On each poll, prefetcharr reads active Jellyfin sessions, ignores anything that is not an episode, resolves the parent series TVDB ID, finds that series in Sonarr, and searches configured future seasons.
+On each poll, prefetcharr-go reads active Jellyfin sessions, ignores anything that is not an episode, resolves the parent series TVDB ID, finds that series in Sonarr, and searches configured future seasons.
 
 With `seasons_ahead: 1` and `include_current_season: false`, watching `S01E01` searches season 2. Set `seasons_ahead: 2` to search seasons 2 and 3.
 
 Already searched seasons are deduplicated for `dedupe_ttl` to avoid submitting the same Sonarr search every poll.
 
-## Configuration
+## ⚙️ Configuration
 
 Copy `config.example.yaml` and fill in the API keys:
 
@@ -50,7 +50,7 @@ allowed_users: []
 
 ## 🐳 Docker Compose
 
-Create `./prefetcharr-go/config.yaml` from `config.example.yaml`, then run prefetcharr with Docker Compose:
+Create `./prefetcharr-go/config.yaml` from `config.example.yaml`, then run prefetcharr-go with Docker Compose:
 
 ```yaml
 services:
@@ -82,8 +82,8 @@ docker compose up -d
 go run ./cmd/prefetcharr -config config.yaml
 ```
 
-## Build
+## 🛠 Build
 
 ```sh
-go build -o prefetcharr ./cmd/prefetcharr
+go build -o prefetcharr-go ./cmd/prefetcharr
 ```
