@@ -5,6 +5,7 @@
     ":dependencyDashboard",
     ":semanticCommits"
   ],
+  "timezone": "Europe/Berlin",
   "baseBranches": [
     "develop"
   ],
