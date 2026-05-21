@@ -7,7 +7,7 @@
 </a>
 
 
-Go rewrite of the original Rust [`prefetcharr`](https://github.com/p-hueber/prefetcharr), focused on one workflow: when someone watches a Jellyfin series, ask Sonarr to search upcoming seasons.
+prefetcharr-go watches active Jellyfin TV sessions and asks Sonarr to search upcoming seasons at the right moment, so the next season is ready before the viewer gets there.
 
 [![Release](https://github.com/Primexz/prefetcharr-go/actions/workflows/release.yml/badge.svg)](https://github.com/Primexz/prefetcharr-go/actions/workflows/release.yml)
 [![golangci-lint](https://github.com/Primexz/prefetcharr-go/actions/workflows/golangci.yml/badge.svg)](https://github.com/Primexz/prefetcharr-go/actions/workflows/golangci.yml)
