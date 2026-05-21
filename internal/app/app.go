@@ -8,6 +8,8 @@ import (
 	"go.uber.org/zap"
 )
 
+const dedupeTTL = 7 * 24 * time.Hour
+
 type App struct {
 	cfg      Config
 	log      *zap.Logger
@@ -22,7 +24,7 @@ func New(cfg Config, log *zap.Logger) (*App, error) {
 		log:      log,
 		jellyfin: NewJellyfinClient(cfg.Jellyfin),
 		sonarr:   NewSonarrClient(cfg.Sonarr),
-		dedupe:   newDedupe(cfg.Prefetch.DedupeTTL.Duration),
+		dedupe:   newDedupe(dedupeTTL),
 	}, nil
 }
 

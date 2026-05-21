@@ -20,11 +20,10 @@ type Config struct {
 }
 
 type PrefetchConfig struct {
-	SeasonsAhead          int      `yaml:"seasons_ahead"`
-	MinSeasonProgress     int      `yaml:"min_season_progress_percent"`
-	IncludeCurrentSeason  bool     `yaml:"include_current_season"`
-	SearchCompleteSeasons bool     `yaml:"search_complete_seasons"`
-	DedupeTTL             Duration `yaml:"dedupe_ttl"`
+	SeasonsAhead          int  `yaml:"seasons_ahead"`
+	MinSeasonProgress     int  `yaml:"min_season_progress_percent"`
+	IncludeCurrentSeason  bool `yaml:"include_current_season"`
+	SearchCompleteSeasons bool `yaml:"search_complete_seasons"`
 }
 
 type ServerConfig struct {
@@ -66,7 +65,6 @@ func LoadConfig(path string) (Config, error) {
 		LogLevel: "info",
 		Prefetch: PrefetchConfig{
 			SeasonsAhead: 1,
-			DedupeTTL:    Duration{Duration: 7 * 24 * time.Hour},
 		},
 	}
 	if err := yaml.Unmarshal(data, &cfg); err != nil {
@@ -103,9 +101,6 @@ func (c Config) validate() error {
 	}
 	if c.Prefetch.MinSeasonProgress < 0 || c.Prefetch.MinSeasonProgress > 100 {
 		return errors.New("prefetch.min_season_progress_percent must be between 0 and 100")
-	}
-	if c.Prefetch.DedupeTTL.Duration <= 0 {
-		return errors.New("prefetch.dedupe_ttl must be positive")
 	}
 	return nil
 }

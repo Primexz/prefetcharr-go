@@ -9,7 +9,6 @@ prefetch:
   min_season_progress_percent: 0
   include_current_season: false
   search_complete_seasons: false
-  dedupe_ttl: 168h
 
 jellyfin:
   url: http://jellyfin:8096
