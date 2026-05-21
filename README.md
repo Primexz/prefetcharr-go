@@ -6,7 +6,11 @@
     <img src="./assets/gopher.png" width="350" />
 </a>
 
+
 Go rewrite of the original Rust [`prefetcharr`](https://github.com/p-hueber/prefetcharr), focused on one workflow: when someone watches a Jellyfin series, ask Sonarr to search upcoming seasons.
+
+[![Release](https://github.com/Primexz/prefetcharr-go/actions/workflows/release.yml/badge.svg)](https://github.com/Primexz/prefetcharr-go/actions/workflows/release.yml)
+[![golangci-lint](https://github.com/Primexz/prefetcharr-go/actions/workflows/golangci.yml/badge.svg)](https://github.com/Primexz/prefetcharr-go/actions/workflows/golangci.yml)
 
 </div>
 
@@ -44,7 +48,35 @@ sonarr:
 allowed_users: []
 ```
 
-## Run
+## 🐳 Docker Compose
+
+Create `./prefetcharr-go/config.yaml` from `config.example.yaml`, then run prefetcharr with Docker Compose:
+
+```yaml
+services:
+  prefetcharr:
+    image: ghcr.io/primexz/prefetcharr-go:latest
+    container_name: prefetcharr-go
+    networks:
+      - arr
+    volumes:
+      - ./prefetcharr:/config:ro
+    restart: always
+```
+
+The container expects the configuration file at `/config/config.yaml`, so with the volume above your local config must be placed at:
+
+```text
+./prefetcharr/config.yaml
+```
+
+Start the container with:
+
+```sh
+docker compose up -d
+```
+
+## 💻 Run
 
 ```sh
 go run ./cmd/prefetcharr -config config.yaml
