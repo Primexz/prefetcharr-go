@@ -4,6 +4,9 @@ log_level: debug
 prefetch:
   # While S01 is playing, search S02. Set to 2 to search S02 and S03.
   seasons_ahead: 1
+  # Start prefetching only once this percentage of the current season is reached.
+  # Set to 0 to prefetch from the first episode.
+  min_season_progress_percent: 0
   include_current_season: false
   search_complete_seasons: false
   dedupe_ttl: 168h

@@ -82,6 +82,31 @@ func (a *App) prefetch(ctx context.Context, np NowPlaying) error {
 		zap.String("user", np.UserName),
 	)
 
+	if a.cfg.Prefetch.MinSeasonProgress > 0 {
+		progress, ok := seasonProgressPercent(series, np.Season, np.Episode)
+		if !ok {
+			a.log.Debug("skip unknown season progress",
+				zap.String("title", series.GetTitle()),
+				zap.Int32("season", np.Season),
+				zap.Int32("episode", np.Episode),
+				zap.String("user", np.UserName),
+				zap.Int("min_season_progress_percent", a.cfg.Prefetch.MinSeasonProgress),
+			)
+			return nil
+		}
+		if progress < float64(a.cfg.Prefetch.MinSeasonProgress) {
+			a.log.Debug("skip season below minimum progress",
+				zap.String("title", series.GetTitle()),
+				zap.Int32("season", np.Season),
+				zap.Int32("episode", np.Episode),
+				zap.Float64("season_progress_percent", progress),
+				zap.Int("min_season_progress_percent", a.cfg.Prefetch.MinSeasonProgress),
+				zap.String("user", np.UserName),
+			)
+			return nil
+		}
+	}
+
 	for _, season := range targetSeasons(np.Season, a.cfg.Prefetch) {
 		if !seasonExists(series, season) {
 			a.log.Debug("skip missing season in Sonarr",

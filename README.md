@@ -19,7 +19,9 @@ Go rewrite of the original Rust [`prefetcharr`](https://github.com/p-hueber/pref
 
 On each poll, prefetcharr-go reads active Jellyfin sessions, ignores anything that is not an episode, resolves the parent series TVDB ID, finds that series in Sonarr, and searches configured future seasons.
 
-With `seasons_ahead: 1` and `include_current_season: false`, watching `S01E01` searches season 2. Set `seasons_ahead: 2` to search seasons 2 and 3.
+With `seasons_ahead: 1`, `min_season_progress_percent: 0`, and `include_current_season: false`, watching `S01E01` searches season 2. Set `seasons_ahead: 2` to search seasons 2 and 3.
+
+Set `min_season_progress_percent` to wait until later in the current season before prefetching. For example, with a 10 episode season, `min_season_progress_percent: 30` means episodes 1 and 2 do not trigger prefetching, while episode 3 and later do.
 
 Already searched seasons are deduplicated for `dedupe_ttl` to avoid submitting the same Sonarr search every poll.
 
@@ -33,6 +35,7 @@ log_level: debug
 
 prefetch:
   seasons_ahead: 1
+  min_season_progress_percent: 0
   include_current_season: false
   search_complete_seasons: false
   dedupe_ttl: 168h

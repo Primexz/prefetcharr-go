@@ -21,6 +21,7 @@ type Config struct {
 
 type PrefetchConfig struct {
 	SeasonsAhead          int      `yaml:"seasons_ahead"`
+	MinSeasonProgress     int      `yaml:"min_season_progress_percent"`
 	IncludeCurrentSeason  bool     `yaml:"include_current_season"`
 	SearchCompleteSeasons bool     `yaml:"search_complete_seasons"`
 	DedupeTTL             Duration `yaml:"dedupe_ttl"`
@@ -99,6 +100,9 @@ func (c Config) validate() error {
 	}
 	if c.Prefetch.SeasonsAhead < 1 {
 		return errors.New("prefetch.seasons_ahead must be at least 1")
+	}
+	if c.Prefetch.MinSeasonProgress < 0 || c.Prefetch.MinSeasonProgress > 100 {
+		return errors.New("prefetch.min_season_progress_percent must be between 0 and 100")
 	}
 	if c.Prefetch.DedupeTTL.Duration <= 0 {
 		return errors.New("prefetch.dedupe_ttl must be positive")

@@ -148,6 +148,35 @@ func seasonComplete(series *sonarr.SeriesResource, season int32) bool {
 	return false
 }
 
+func seasonProgressPercent(series *sonarr.SeriesResource, season int32, episode int32) (float64, bool) {
+	total := seasonEpisodeCount(series, season)
+	if total <= 0 {
+		return 0, false
+	}
+	if episode <= 0 {
+		return 0, true
+	}
+	if episode >= total {
+		return 100, true
+	}
+	return float64(episode) / float64(total) * 100, true
+}
+
+func seasonEpisodeCount(series *sonarr.SeriesResource, season int32) int32 {
+	for i := range series.Seasons {
+		s := &series.Seasons[i]
+		if s.GetSeasonNumber() != season || s.Statistics == nil {
+			continue
+		}
+		total := s.Statistics.GetTotalEpisodeCount()
+		if total == 0 {
+			total = s.Statistics.GetEpisodeCount()
+		}
+		return total
+	}
+	return 0
+}
+
 func mergeContext(parent context.Context, auth context.Context) context.Context {
 	if keys, ok := auth.Value(sonarr.ContextAPIKeys).(map[string]sonarr.APIKey); ok {
 		return context.WithValue(parent, sonarr.ContextAPIKeys, keys)
