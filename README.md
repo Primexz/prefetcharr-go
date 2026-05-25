@@ -38,6 +38,7 @@ prefetch:
   min_season_progress_percent: 0
   include_current_season: false
   search_complete_seasons: false
+  excluded_sonarr_tags: []
 
 jellyfin:
   url: http://jellyfin:8096
@@ -48,6 +49,14 @@ sonarr:
   api_key: your-sonarr-api-key
 
 allowed_users: []
+```
+
+Set `excluded_sonarr_tags` to Sonarr tag labels for series that should never prefetch. For example, a Sonarr series tagged `no-prefetch` is skipped entirely with:
+
+```yaml
+prefetch:
+  excluded_sonarr_tags:
+    - no-prefetch
 ```
 
 ## 🐳 Docker Compose

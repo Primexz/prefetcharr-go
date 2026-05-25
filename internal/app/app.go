@@ -3,8 +3,10 @@ package app
 import (
 	"context"
 	"slices"
+	"strings"
 	"time"
 
+	sonarr "github.com/devopsarr/sonarr-go/sonarr"
 	"go.uber.org/zap"
 )
 
@@ -84,6 +86,18 @@ func (a *App) prefetch(ctx context.Context, np NowPlaying) error {
 		zap.String("user", np.UserName),
 	)
 
+	excludedTag, excluded, err := a.excludedSonarrTag(ctx, series)
+	if err != nil {
+		return err
+	}
+	if excluded {
+		a.log.Info("skip excluded Sonarr tag",
+			zap.String("title", series.GetTitle()),
+			zap.String("tag", excludedTag),
+		)
+		return nil
+	}
+
 	if a.cfg.Prefetch.MinSeasonProgress > 0 {
 		progress, ok := seasonProgressPercent(series, np.Season, np.Episode)
 		if !ok {
@@ -151,6 +165,20 @@ func (a *App) userAllowed(user string) bool {
 	return len(a.cfg.AllowedUsers) == 0 || slices.Contains(a.cfg.AllowedUsers, user)
 }
 
+func (a *App) excludedSonarrTag(ctx context.Context, series sonarrSeries) (string, bool, error) {
+	if len(a.cfg.Prefetch.ExcludedSonarrTags) == 0 {
+		return "", false, nil
+	}
+
+	tags, err := a.sonarr.Tags(ctx)
+	if err != nil {
+		return "", false, err
+	}
+	excluded := excludedSonarrTagIDs(tags, a.cfg.Prefetch.ExcludedSonarrTags)
+	tag, ok := matchingExcludedSonarrTag(series.GetTags(), excluded)
+	return tag, ok, nil
+}
+
 func targetSeasons(current int32, cfg PrefetchConfig) []int32 {
 	start := current + 1
 	if cfg.IncludeCurrentSeason {
@@ -162,4 +190,33 @@ func targetSeasons(current int32, cfg PrefetchConfig) []int32 {
 		seasons = append(seasons, start+int32(i))
 	}
 	return seasons
+}
+
+type sonarrSeries interface {
+	GetTags() []int32
+}
+
+func excludedSonarrTagIDs(tags []sonarr.TagResource, names []string) map[int32]string {
+	labels := make(map[string]string, len(names))
+	for _, name := range names {
+		trimmed := strings.TrimSpace(name)
+		labels[strings.ToLower(trimmed)] = trimmed
+	}
+
+	ids := make(map[int32]string, len(labels))
+	for i := range tags {
+		if label, ok := labels[strings.ToLower(strings.TrimSpace(tags[i].GetLabel()))]; ok {
+			ids[tags[i].GetId()] = label
+		}
+	}
+	return ids
+}
+
+func matchingExcludedSonarrTag(seriesTags []int32, excluded map[int32]string) (string, bool) {
+	for _, id := range seriesTags {
+		if label, ok := excluded[id]; ok {
+			return label, true
+		}
+	}
+	return "", false
 }

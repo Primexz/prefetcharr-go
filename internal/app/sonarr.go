@@ -54,6 +54,11 @@ func (c *SonarrClient) SeriesByTVDB(ctx context.Context, tvdbID int32) (*sonarr.
 	return nil, fmt.Errorf("series with tvdb id %d not found in Sonarr", tvdbID)
 }
 
+func (c *SonarrClient) Tags(ctx context.Context) ([]sonarr.TagResource, error) {
+	tags, _, err := c.api.TagAPI.ListTag(mergeContext(ctx, c.ctx)).Execute()
+	return tags, err
+}
+
 func (c *SonarrClient) MonitorSeason(ctx context.Context, series *sonarr.SeriesResource, season int32) error {
 	changed := false
 	if series.Monitored == nil || !*series.Monitored {

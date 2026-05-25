@@ -9,6 +9,8 @@ prefetch:
   min_season_progress_percent: 0
   include_current_season: false
   search_complete_seasons: false
+  # Sonarr tag labels that should skip prefetching for matching series.
+  excluded_sonarr_tags: []
 
 jellyfin:
   url: http://jellyfin:8096

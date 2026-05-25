@@ -20,10 +20,11 @@ type Config struct {
 }
 
 type PrefetchConfig struct {
-	SeasonsAhead          int  `yaml:"seasons_ahead"`
-	MinSeasonProgress     int  `yaml:"min_season_progress_percent"`
-	IncludeCurrentSeason  bool `yaml:"include_current_season"`
-	SearchCompleteSeasons bool `yaml:"search_complete_seasons"`
+	SeasonsAhead          int      `yaml:"seasons_ahead"`
+	MinSeasonProgress     int      `yaml:"min_season_progress_percent"`
+	IncludeCurrentSeason  bool     `yaml:"include_current_season"`
+	SearchCompleteSeasons bool     `yaml:"search_complete_seasons"`
+	ExcludedSonarrTags    []string `yaml:"excluded_sonarr_tags"`
 }
 
 type ServerConfig struct {
@@ -101,6 +102,11 @@ func (c Config) validate() error {
 	}
 	if c.Prefetch.MinSeasonProgress < 0 || c.Prefetch.MinSeasonProgress > 100 {
 		return errors.New("prefetch.min_season_progress_percent must be between 0 and 100")
+	}
+	for i, tag := range c.Prefetch.ExcludedSonarrTags {
+		if strings.TrimSpace(tag) == "" {
+			return fmt.Errorf("prefetch.excluded_sonarr_tags[%d] must not be empty", i)
+		}
 	}
 	return nil
 }
