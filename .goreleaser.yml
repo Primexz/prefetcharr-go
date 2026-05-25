@@ -40,3 +40,28 @@ docker_manifests:
     image_templates:
     - "ghcr.io/primexz/prefetcharr-go:{{ .Version }}-amd64"
     - "ghcr.io/primexz/prefetcharr-go:{{ .Version }}-arm64v8"
+
+changelog:
+  sort: asc
+  use: github
+  filters:
+    exclude:
+      - "^test:"
+      - "^chore"
+      - "merge conflict"
+      - Merge pull request
+      - Merge remote-tracking branch
+      - Merge branch
+      - go mod tidy
+  groups:
+    - title: "🚀 New Features"
+      regexp: "^.*feat[(\\w)]*:+.*$"
+      order: 100
+    - title: "🐛 Bug fixes"
+      regexp: "^.*fix[(\\w)]*:+.*$"
+      order: 200
+    - title: "📦 Dependency updates"
+      regexp: "^.*\\(deps\\)*:+.*$"
+      order: 300
+    - title: "🔧 Other work"
+      order: 9999
