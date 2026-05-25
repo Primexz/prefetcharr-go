@@ -193,15 +193,15 @@ func targetSeasons(current int32, cfg PrefetchConfig) []int32 {
 }
 
 func excludedSonarrTagIDs(tags []sonarr.TagResource, names []string) map[int32]string {
-	labels := make(map[string]struct{}, len(names))
+	excluded := make(map[string]struct{}, len(names))
 	for _, name := range names {
-		labels[normalizeTag(name)] = struct{}{}
+		excluded[normalizeTag(name)] = struct{}{}
 	}
 
-	ids := make(map[int32]string, len(labels))
+	ids := make(map[int32]string, len(excluded))
 	for i := range tags {
 		label := normalizeTag(tags[i].GetLabel())
-		if _, ok := labels[label]; ok {
+		if _, ok := excluded[label]; ok {
 			ids[tags[i].GetId()] = label
 		}
 	}
