@@ -199,17 +199,20 @@ type sonarrSeries interface {
 func excludedSonarrTagIDs(tags []sonarr.TagResource, names []string) map[int32]string {
 	labels := make(map[string]string, len(names))
 	for _, name := range names {
-		trimmed := strings.TrimSpace(name)
-		labels[strings.ToLower(trimmed)] = trimmed
+		labels[normalizeTag(name)] = strings.TrimSpace(name)
 	}
 
 	ids := make(map[int32]string, len(labels))
 	for i := range tags {
-		if label, ok := labels[strings.ToLower(strings.TrimSpace(tags[i].GetLabel()))]; ok {
+		if label, ok := labels[normalizeTag(tags[i].GetLabel())]; ok {
 			ids[tags[i].GetId()] = label
 		}
 	}
 	return ids
+}
+
+func normalizeTag(label string) string {
+	return strings.ToLower(strings.TrimSpace(label))
 }
 
 func matchingExcludedSonarrTag(seriesTags []int32, excluded map[int32]string) (string, bool) {
