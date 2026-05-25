@@ -197,14 +197,15 @@ type sonarrSeries interface {
 }
 
 func excludedSonarrTagIDs(tags []sonarr.TagResource, names []string) map[int32]string {
-	labels := make(map[string]string, len(names))
+	labels := make(map[string]struct{}, len(names))
 	for _, name := range names {
-		labels[normalizeTag(name)] = strings.TrimSpace(name)
+		labels[normalizeTag(name)] = struct{}{}
 	}
 
 	ids := make(map[int32]string, len(labels))
 	for i := range tags {
-		if label, ok := labels[normalizeTag(tags[i].GetLabel())]; ok {
+		label := normalizeTag(tags[i].GetLabel())
+		if _, ok := labels[label]; ok {
 			ids[tags[i].GetId()] = label
 		}
 	}
