@@ -165,7 +165,7 @@ func (a *App) userAllowed(user string) bool {
 	return len(a.cfg.AllowedUsers) == 0 || slices.Contains(a.cfg.AllowedUsers, user)
 }
 
-func (a *App) excludedSonarrTag(ctx context.Context, series sonarrSeries) (string, bool, error) {
+func (a *App) excludedSonarrTag(ctx context.Context, series *sonarr.SeriesResource) (string, bool, error) {
 	if len(a.cfg.Prefetch.ExcludedSonarrTags) == 0 {
 		return "", false, nil
 	}
@@ -190,10 +190,6 @@ func targetSeasons(current int32, cfg PrefetchConfig) []int32 {
 		seasons = append(seasons, start+int32(i))
 	}
 	return seasons
-}
-
-type sonarrSeries interface {
-	GetTags() []int32
 }
 
 func excludedSonarrTagIDs(tags []sonarr.TagResource, names []string) map[int32]string {
