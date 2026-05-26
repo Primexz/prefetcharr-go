@@ -10,6 +10,14 @@ prefetch:
   include_current_season: false
   search_complete_seasons: false
 
+notifications:
+  enabled: false
+  # Shoutrrr URLs can target Discord, Gotify, ntfy, Slack, SMTP, webhooks, and more.
+  # Example: ntfy://ntfy.sh/prefetcharr-alerts
+  urls: []
+  events:
+    - search_submitted
+
 jellyfin:
   url: http://jellyfin:8096
   api_key: your-jellyfin-api-key

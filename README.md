@@ -39,6 +39,12 @@ prefetch:
   include_current_season: false
   search_complete_seasons: false
 
+notifications:
+  enabled: false
+  urls: []
+  events:
+    - search_submitted
+
 jellyfin:
   url: http://jellyfin:8096
   api_key: your-jellyfin-api-key
@@ -49,6 +55,21 @@ sonarr:
 
 allowed_users: []
 ```
+
+Notifications use [shoutrrr](https://github.com/nicholas-fedor/shoutrrr) URLs, so the same config can target Discord, Gotify, ntfy, Slack, SMTP, webhooks, and other supported services. Notification delivery is best-effort: failures are logged with notification URLs redacted and do not stop polling or searching.
+
+```yaml
+notifications:
+  enabled: true
+  urls:
+    - ntfy://ntfy.sh/prefetcharr-alerts
+  events:
+    - search_submitted
+```
+
+Supported events are:
+
+- `search_submitted`: a Sonarr season search command was submitted.
 
 ## 🐳 Docker Compose
 

@@ -11,12 +11,13 @@ import (
 )
 
 type Config struct {
-	Interval     Duration       `yaml:"interval"`
-	LogLevel     string         `yaml:"log_level"`
-	Prefetch     PrefetchConfig `yaml:"prefetch"`
-	Jellyfin     ServerConfig   `yaml:"jellyfin"`
-	Sonarr       ServerConfig   `yaml:"sonarr"`
-	AllowedUsers []string       `yaml:"allowed_users"`
+	Interval      Duration            `yaml:"interval"`
+	LogLevel      string              `yaml:"log_level"`
+	Prefetch      PrefetchConfig      `yaml:"prefetch"`
+	Notifications NotificationsConfig `yaml:"notifications"`
+	Jellyfin      ServerConfig        `yaml:"jellyfin"`
+	Sonarr        ServerConfig        `yaml:"sonarr"`
+	AllowedUsers  []string            `yaml:"allowed_users"`
 }
 
 type PrefetchConfig struct {
@@ -29,6 +30,12 @@ type PrefetchConfig struct {
 type ServerConfig struct {
 	URL    string `yaml:"url"`
 	APIKey string `yaml:"api_key"`
+}
+
+type NotificationsConfig struct {
+	Enabled bool     `yaml:"enabled"`
+	URLs    []string `yaml:"urls"`
+	Events  []string `yaml:"events"`
 }
 
 type Duration struct {
@@ -66,6 +73,9 @@ func LoadConfig(path string) (Config, error) {
 		Prefetch: PrefetchConfig{
 			SeasonsAhead: 1,
 		},
+		Notifications: NotificationsConfig{
+			Events: defaultNotificationEvents(),
+		},
 	}
 	if err := yaml.Unmarshal(data, &cfg); err != nil {
 		return Config{}, err
@@ -101,6 +111,23 @@ func (c Config) validate() error {
 	}
 	if c.Prefetch.MinSeasonProgress < 0 || c.Prefetch.MinSeasonProgress > 100 {
 		return errors.New("prefetch.min_season_progress_percent must be between 0 and 100")
+	}
+	if c.Notifications.Enabled {
+		hasURL := false
+		for i, rawURL := range c.Notifications.URLs {
+			if strings.TrimSpace(rawURL) == "" {
+				return fmt.Errorf("notifications.urls[%d] must not be empty", i)
+			}
+			hasURL = true
+		}
+		if !hasURL {
+			return errors.New("notifications.urls must include at least one URL when notifications are enabled")
+		}
+	}
+	for _, event := range c.Notifications.Events {
+		if !validNotificationEvent(event) {
+			return fmt.Errorf("notifications.events contains unknown event %q", event)
+		}
 	}
 	return nil
 }

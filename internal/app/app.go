@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"fmt"
 	"slices"
 	"time"
 
@@ -16,15 +17,22 @@ type App struct {
 	jellyfin *JellyfinClient
 	sonarr   *SonarrClient
 	dedupe   *dedupe
+	notifier *notifier
 }
 
 func New(cfg Config, log *zap.Logger) (*App, error) {
+	notifier, err := newNotifier(cfg.Notifications, log)
+	if err != nil {
+		return nil, err
+	}
+
 	return &App{
 		cfg:      cfg,
 		log:      log,
 		jellyfin: NewJellyfinClient(cfg.Jellyfin),
 		sonarr:   NewSonarrClient(cfg.Sonarr),
 		dedupe:   newDedupe(dedupeTTL),
+		notifier: notifier,
 	}, nil
 }
 
@@ -143,12 +151,22 @@ func (a *App) prefetch(ctx context.Context, np NowPlaying) error {
 			return err
 		}
 		a.dedupe.Mark(key, now)
+		a.notifier.Notify(notificationEventSearchSubmitted, notificationPayload{
+			SeriesTitle:   series.GetTitle(),
+			Season:        season,
+			User:          np.UserName,
+			TriggerReason: triggerReason(np),
+		})
 	}
 	return nil
 }
 
 func (a *App) userAllowed(user string) bool {
 	return len(a.cfg.AllowedUsers) == 0 || slices.Contains(a.cfg.AllowedUsers, user)
+}
+
+func triggerReason(np NowPlaying) string {
+	return fmt.Sprintf("watching S%02dE%02d", np.Season, np.Episode)
 }
 
 func targetSeasons(current int32, cfg PrefetchConfig) []int32 {
