@@ -58,11 +58,8 @@ func (n *notifier) Notify(event string, payload notificationPayload) {
 	}
 
 	message := notificationMessage(event, payload)
-	params := types.Params{}
-	params.SetTitle(notificationTitle(event))
-	params.SetMessage(message)
 
-	for i, err := range n.sender.Send(message, &params) {
+	for i, err := range n.sender.Send(message, nil) {
 		if err == nil {
 			continue
 		}
