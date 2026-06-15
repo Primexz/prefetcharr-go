@@ -5,7 +5,7 @@ go 1.26.4
 require (
 	github.com/devopsarr/sonarr-go v1.1.1
 	github.com/nicholas-fedor/shoutrrr v0.16.1
-	github.com/sj14/jellyfin-go v0.4.3
+	github.com/sj14/jellyfin-go v0.4.4
 	go.uber.org/zap v1.28.0
 	gopkg.in/yaml.v3 v3.0.1
 )
