@@ -1,6 +1,6 @@
 module github.com/Primexz/prefetcharr-go
 
-go 1.26.4
+go 1.27.1
 
 require (
 	github.com/devopsarr/sonarr-go v1.1.1
